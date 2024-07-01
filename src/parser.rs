@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-
+use clap::builder::Str;
 use ego_tree::NodeRef;
 use regex::Regex;
 use scraper::{Html, Node, Selector};
@@ -63,7 +63,9 @@ fn hiragana_to_romaji(hiragana: &String) -> String{
     }
     result.chars()
         .filter(|&c| c.is_ascii_alphabetic() || c == ' ')
-        .collect()
+        .collect::<String>()
+        .trim_end()
+        .to_string()
 }
 
 

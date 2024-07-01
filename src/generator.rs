@@ -13,7 +13,7 @@ pub fn to_html(options: Options) -> String {
     let mut result = String::new();
 
     for lyric_line in options.lyric_lines {
-        let mut line = String::new();
+        let mut line = String::from("    <div>");
         let mut romaji_line = String::new();
         for word in lyric_line.lines {
             match word.word_type {
@@ -40,7 +40,7 @@ pub fn to_html(options: Options) -> String {
             result.push_str("<br/>");
             result.push_str(&*lyric_line.translated);
         }
-        result.push_str("<br/><br/>\n");
+        result.push_str("</div>\n    <br/>\n");
     }
 
     HTML_MODEL.replace("{}", &*result)
