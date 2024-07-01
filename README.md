@@ -10,15 +10,14 @@
 ## 提示
 
 ```shell
-PS> .\moelyrics.exe -h
-Usage: moelyrics.exe [OPTIONS] --url <URL> --output <FILE PATH>
+Usage: moelyrics.exe [OPTIONS] --url <URL> --output <FILE PATH> --hiragana <MODE>
 
 Options:
   -u, --url <URL>
   -o, --output <FILE PATH>  Output .html file path
       --romaji              Display Romaji below lyric lines
       --translation         Display Chinese Translation below lyric lines
-      --hiragana            Display Hiragana above lyric lines
+      --hiragana <MODE>     Display Hiragana above lyric lines with specific mode [possible values: tips, pure, hidden]
   -h, --help                Print help
   -V, --version             Print version
 ```
@@ -26,7 +25,7 @@ Options:
 ## 示例
 
 ```shell
-PS C:\CodeSpace\moelyrics\target\debug> .\moelyrics.exe -u https://mzh.moegirl.org.cn/DESIRE -o a.html --romaji --hiragana --translation
+PS C:\CodeSpace\moelyrics\target\debug> .\moelyrics.exe -u https://mzh.moegirl.org.cn/DESIRE -o a.html --romaji --hiragana tips --translation
 ```
 
 Output:

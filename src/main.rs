@@ -6,7 +6,7 @@ use std::path::PathBuf;
 use clap::Parser;
 use url::Url;
 
-use moelyrics::generator::{Options, to_html};
+use moelyrics::generator::{HiraganaOptions, Options, to_html};
 use moelyrics::html_helper::extract_title;
 use moelyrics::parser;
 
@@ -25,8 +25,8 @@ struct Cli {
     #[arg(long, help = "Display Chinese Translation below lyric lines")]
     translation: bool,
 
-    #[arg(long, help = "Display Hiragana above lyric lines")]
-    hiragana: bool,
+    #[arg(value_enum, long, value_name = "MODE", help = "Display Hiragana above lyric lines with specific mode")]
+    hiragana: HiraganaOptions,
 }
 
 #[tokio::main]
@@ -48,11 +48,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         panic!("Empty lyrics")
     }
 
+
     let html = to_html(Options {
         lyric_lines: parsed,
         show_romaji: cli.romaji,
         show_translation: cli.translation,
-        show_hiragana_tips: cli.hiragana,
+        show_hiragana: cli.hiragana,
     });
 
     let mut file = File::create(&output)?;

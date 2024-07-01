@@ -1,12 +1,20 @@
+use clap::ValueEnum;
 use crate::html_helper::HTML_MODEL;
 use crate::parser::LyricLine;
 use crate::parser::LyricWordType::{Hiragana, Kanji};
+
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
+pub enum HiraganaOptions {
+    Tips,
+    Pure,
+    Hidden
+}
 
 pub struct Options {
     pub lyric_lines: Vec<LyricLine>,
     pub show_romaji: bool,
     pub show_translation: bool,
-    pub show_hiragana_tips: bool
+    pub show_hiragana: HiraganaOptions
 }
 
 pub fn to_html(options: Options) -> String {
@@ -18,10 +26,16 @@ pub fn to_html(options: Options) -> String {
         for word in lyric_line.lines {
             match word.word_type {
                 Kanji => {
-                    if options.show_hiragana_tips {
-                        line.push_str(format!("<ruby>{}<rt>{}</rt></ruby>", word.word, word.hiragana.unwrap()).as_str())
-                    } else {
-                        line.push_str(&*word.word)
+                    match options.show_hiragana {
+                        HiraganaOptions::Tips => {
+                            line.push_str(format!("<ruby>{}<rt>{}</rt></ruby>", word.word, word.hiragana.unwrap()).as_str())
+                        },
+                        HiraganaOptions::Pure => {
+                            line.push_str(&*word.hiragana.unwrap())
+                        },
+                        HiraganaOptions::Hidden => {
+                            line.push_str(&*word.word)
+                        }
                     }
                 },
                 Hiragana => {
