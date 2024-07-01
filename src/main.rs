@@ -1,3 +1,4 @@
+use std::fs;
 use std::fs::File;
 use std::io::Write;
 use std::path::PathBuf;
@@ -54,9 +55,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         show_hiragana_tips: cli.hiragana,
     });
 
-    let mut file = File::create(output)?;
+    let mut file = File::create(&output)?;
     file.write(html.as_bytes())?;
-    println!("Generated");
+
+    let output_path = fs::canonicalize(&output).unwrap().to_string_lossy().to_string();
+    println!("Generated ({})", if output_path.starts_with(r"\\?\") {
+        &output_path[4..]
+    } else {
+        &output_path
+    });
+
     Ok(())
 }
 
