@@ -48,3 +48,13 @@ Output:
 </body>
 </html>
 ```
+
+### 演示
+
+- Pure + Romaji
+
+![pure_romaji.png](assets/pure_romaji.png)
+
+- Tips + Translation + Romaji
+
+![tips_translation_romaji.png](assets/tips_translation_romaji.png)
