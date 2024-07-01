@@ -19,7 +19,7 @@ pub fn to_html(options: Options) -> String {
             match word.word_type {
                 Kanji => {
                     if options.show_hiragana_tips {
-                        line.push_str(format!("<ruby><rb>{}</rb><rt>{}</rt></ruby>", word.word, word.hiragana.unwrap()).as_str())
+                        line.push_str(format!("<ruby>{}<rt>{}</rt></ruby>", word.word, word.hiragana.unwrap()).as_str())
                     } else {
                         line.push_str(&*word.word)
                     }
