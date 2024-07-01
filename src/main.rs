@@ -6,6 +6,7 @@ use clap::Parser;
 use url::Url;
 
 use moelyrics::generator::{Options, to_html};
+use moelyrics::html_helper::extract_title;
 use moelyrics::parser;
 
 #[derive(Parser)]
@@ -30,20 +31,32 @@ struct Cli {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
+
     let output = cli.output;
-    if Url::parse(cli.url.as_str()).is_err() {
+    let parsed_url = Url::parse(cli.url.as_str());
+    if parsed_url.is_err() || !parsed_url.unwrap().host_str().unwrap().eq("mzh.moegirl.org.cn"){
         panic!("Invalid url")
     }
+
     let resp = reqwest::get(cli.url).await?.text().await?;
+    let resp_title = extract_title(&resp).unwrap();
+    println!("Title: {}", resp_title.split_whitespace().next().unwrap());
+
     let parsed = parser::to_lyric_lines(resp.as_str());
+    if parsed.is_empty() {
+        panic!("Empty lyrics")
+    }
+
     let html = to_html(Options {
         lyric_lines: parsed,
         show_romaji: cli.romaji,
         show_translation: cli.translation,
         show_hiragana_tips: cli.hiragana,
     });
-    let mut file = File::create(output).unwrap();
-    file.write(html.as_bytes()).unwrap();
+
+    let mut file = File::create(output)?;
+    file.write(html.as_bytes())?;
+    println!("Generated");
     Ok(())
 }
 

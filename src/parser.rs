@@ -38,7 +38,7 @@ fn process_element(element: &NodeRef<Node>, word: &mut LyricWord) {
     for original_lyrics_line_words in element.children() {
         if let Some(word_type) = &original_lyrics_line_words.value().as_element() {
             let word_type = &word_type.name.local;
-            let mut words: Vec<_> = original_lyrics_line_words.children().collect();
+            let words: Vec<_> = original_lyrics_line_words.children().collect();
             if word_type.starts_with("rb") {
                 word.word = words[0].value().as_text().unwrap().to_string();
             } else if word_type.starts_with("rt") {

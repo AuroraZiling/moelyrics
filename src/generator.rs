@@ -1,16 +1,6 @@
+use crate::html_helper::HTML_MODEL;
 use crate::parser::LyricLine;
 use crate::parser::LyricWordType::{Hiragana, Kanji};
-
-const HTML_MODEL: &str = r#"<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Moelyrics</title>
-</head>
-<body>
-{}
-</body>
-</html>"#;
 
 pub struct Options {
     pub lyric_lines: Vec<LyricLine>,
