@@ -3,6 +3,7 @@ use std::io::Write;
 use std::path::PathBuf;
 
 use clap::Parser;
+use url::Url;
 
 use moelyrics::generator::{Options, to_html};
 use moelyrics::parser;
@@ -11,10 +12,10 @@ use moelyrics::parser;
 #[command(version, about, long_about = None)]
 struct Cli {
     #[arg(short, long, value_name = "URL")]
-    url: Option<String>,
+    url: String,
 
     #[arg(short, long, value_name = "FILE PATH", help = "Output .html file path")]
-    output: Option<PathBuf>,
+    output: PathBuf,
 
     #[arg(long, help = "Display Romaji below lyric lines")]
     romaji: bool,
@@ -29,8 +30,11 @@ struct Cli {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
-    let output = cli.output.expect("Invalid output file path");
-    let resp = reqwest::get(cli.url.expect("Invalid url")).await?.text().await?;
+    let output = cli.output;
+    if Url::parse(cli.url.as_str()).is_err() {
+        panic!("Invalid url")
+    }
+    let resp = reqwest::get(cli.url).await?.text().await?;
     let parsed = parser::to_lyric_lines(resp.as_str());
     let html = to_html(Options {
         lyric_lines: parsed,
